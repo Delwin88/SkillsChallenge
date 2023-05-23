@@ -99,11 +99,9 @@ namespace InterviewTest.Controllers
         [HttpGet]
         public async Task<ActionResult<bool>> Get()
         {
-
             SeedPeople();
             SeedPlaces();
             SeedThings();
-            HttpContext.Response.Headers.Remove("X-Powered-By");
             return Ok();
         }
     }
