@@ -33,15 +33,15 @@ namespace InterviewTest.Controllers
             return _threadSafeClass.people.Values.SelectMany(personList => personList).ToList();
         }
 
-        //[HttpPost]
-        //public void Post(List<Person> input)
-        //{
-        //    if (input!= null)
-        //    {
-        //        _threadSafeClass.people.TryAdd(2,input);
-        //    }
+        [HttpPost]
+        public void Post(List<Person> input)
+        {
+            if (input != null)
+            {
+                _threadSafeClass.people.TryAdd(2, input);
+            }
 
-            
-        //}
+
+        }
     }
 }

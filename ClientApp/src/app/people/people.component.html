@@ -1,8 +1,10 @@
-<input type="search" appQuickSearch (valueUpdated)="search($event)"/>
-<!--<button class="btn btn-primary" (click)="Add()">Add People</button>-->
-<ng-container *ngIf="!isLoading;else loading">
-  <app-table [rows]="rows" [columns]="columns"></app-table>
-</ng-container>
-<ng-template #loading>
-  Loading...
-</ng-template>
+<div class="btn-toolbar">
+  <input type="search" appQuickSearch (valueUpdated)="search($event)" />
+  <button class="btn btn-primary btn-sm" (click)="Add()">Add People</button>
+</div>
+  <ng-container *ngIf="!isLoading;else loading">
+    <app-table [rows]="rows" [columns]="columns"></app-table>
+  </ng-container>
+  <ng-template #loading>
+    Loading...
+  </ng-template>
