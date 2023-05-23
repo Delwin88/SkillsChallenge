@@ -1,4 +1,5 @@
 <input type="search" appQuickSearch (valueUpdated)="search($event)"/>
+<!--<button class="btn btn-primary" (click)="Add()">Add People</button>-->
 <ng-container *ngIf="!isLoading;else loading">
   <app-table [rows]="rows" [columns]="columns"></app-table>
 </ng-container>

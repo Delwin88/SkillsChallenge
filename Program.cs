@@ -1,5 +1,10 @@
+using InterviewTest.Helper;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Collections.Concurrent;
+using System;
 using InterviewTest.Models;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,23 +12,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Add DbContext
-builder.Services.AddDbContext<PersonContext>(opt => opt.UseInMemoryDatabase("People"));
-builder.Services.AddDbContext<PlaceContext>(opt => opt.UseInMemoryDatabase("Places"));
-builder.Services.AddDbContext<ThingContext>(opt => opt.UseInMemoryDatabase("Things"));
+builder.WebHost.UseKestrel(option => option.AddServerHeader = false);
 
+// Add concurrent class
+builder.Services.AddSingleton<ThreadSafeClass>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseRemovePoweredBy();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseStaticFiles();
 app.UseRouting();
@@ -35,5 +39,4 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
-
 app.Run();

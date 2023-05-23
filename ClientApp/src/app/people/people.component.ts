@@ -38,6 +38,17 @@ export class PeopleComponent implements OnInit {
     this.search();
   }
 
+  Add() {
+    let input: any[] = [];
+    let value = { "Id": 2, "FirstName": "Jim", "LastName": "Parsons", "Birthday": "1977-02-20T00:00:00" }
+    input.push(value);
+    this.service.add(input).subscribe(value => {
+      this.isLoading = false;
+      this.search();
+      this.cd.detectChanges();
+    });
+  }
+
   search(filter = '') {
     this.service.fetch(filter).subscribe(value => {
       this.rows = value;

@@ -1,6 +1,7 @@
 ﻿using InterviewTest.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace InterviewTest.Controllers
 {
@@ -8,14 +9,14 @@ namespace InterviewTest.Controllers
     [ApiController]
     public class PlacesController : ControllerBase
     {
-       private readonly PlaceContext _context;
+        private readonly ThreadSafeClass _threadSafeClass;
 
         private readonly ILogger<PlacesController> _logger;
 
-        public PlacesController(ILogger<PlacesController> logger, PlaceContext context)
+        public PlacesController(ILogger<PlacesController> logger, ThreadSafeClass threadSafeClass)
         {
             _logger = logger;
-            _context = context;
+            _threadSafeClass = threadSafeClass;
         }
 
 
@@ -24,10 +25,12 @@ namespace InterviewTest.Controllers
         {
             if (!string.IsNullOrEmpty(filter))
             {
-                return await _context.Places.Where(p => p.Name.ToLower().Contains(filter.ToLower()) || p.City.ToLower().Contains(filter.ToLower()) || p.State.ToLower().Contains(filter.ToLower())).ToListAsync();
+                return _threadSafeClass.place.Values.SelectMany(placeList => placeList)
+                    .Where(placename => placename.Name.ToLower().Contains(filter.ToLower()) || placename.City.ToLower().Contains(filter.ToLower()) ||
+                    placename.State.ToLower().Contains(filter.ToLower())).ToList();
             }
 
-            return await _context.Places.ToListAsync();
+            return  _threadSafeClass.place.Values.SelectMany(placeList => placeList).ToList();
         }
     }
 }

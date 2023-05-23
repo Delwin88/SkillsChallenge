@@ -8,15 +8,13 @@ namespace InterviewTest.Controllers
     [ApiController]
     public class ThingsController : ControllerBase
     {
-      
-
         private readonly ILogger<ThingsController> _logger;
-        private readonly ThingContext _context;
+        private readonly ThreadSafeClass _threadSafeClass;
 
-        public ThingsController(ILogger<ThingsController> logger, ThingContext context)
+        public ThingsController(ILogger<ThingsController> logger, ThreadSafeClass threadSafeClass)
         {
             _logger = logger;
-            _context = context;
+            _threadSafeClass = threadSafeClass;
         }
 
 
@@ -25,10 +23,12 @@ namespace InterviewTest.Controllers
         {
             if (!string.IsNullOrEmpty(filter))
             {
-                return await _context.Things.Where(p => p.Name.ToLower().Contains(filter.ToLower()) || p.Description.ToLower().Contains(filter.ToLower())).ToListAsync();
+                return _threadSafeClass.thing.Values.SelectMany(thingList => thingList)
+                    .Where(thingName => thingName.Name.ToLower().Contains(filter.ToLower()) ||
+                    thingName.Description.ToLower().Contains(filter.ToLower())).ToList();
             }
 
-            return await _context.Things.ToListAsync();
+            return _threadSafeClass.thing.Values.SelectMany(thingList => thingList).ToList();
         }
     }
 }
